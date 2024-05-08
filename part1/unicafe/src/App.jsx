@@ -27,7 +27,7 @@ const Staticts = ({ good, bad, clicks, neutral }) => {
       <StatisticLine text="Bad" value={bad} />
       <StatisticLine text="all" value={clicks} />
       <StatisticLine text="average" value={calculateAverage()} />
-      <StatisticLine text="positive" value={calculatePercentage()} />
+      <StatisticLine text="positive" value={`${calculatePercentage()} %`} />
     </div>
   )
 }
