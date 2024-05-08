@@ -1,5 +1,37 @@
 import { useState } from 'react'
 
+const WarningNoFeedback = () => {
+  return <p>No feedback given</p>
+}
+
+const StatisticLine = ({ text, value }) => {
+  return <p>{text}: {value}</p>
+}
+
+const Staticts = ({ good, bad, clicks, neutral }) => {
+  const calculateAverage = () => {
+    const total = (good * 1) + (bad * -1)
+    const avg = total / clicks
+    return avg
+  }
+
+  const calculatePercentage = () => {
+    const positive = (good / clicks) * 100
+    return positive
+  }
+
+  return (
+    <div>
+      <StatisticLine text="Good" value={good} />
+      <StatisticLine text="Neutral" value={neutral} />
+      <StatisticLine text="Bad" value={bad} />
+      <StatisticLine text="all" value={clicks} />
+      <StatisticLine text="average" value={calculateAverage()} />
+      <StatisticLine text="positive" value={calculatePercentage()} />
+    </div>
+  )
+}
+
 const App = () => {
   // guarda los clics de cada botón en su propio estado
   const [feedback, setFeedback] = useState({
@@ -18,7 +50,7 @@ const App = () => {
     setFeedback(newCount)
   }
 
-  const handleNeutal = () => {
+  const handleNeutral = () => {
     const newCount = {
       ...feedback,
       neutral: feedback.neutral + 1,
@@ -27,7 +59,7 @@ const App = () => {
     setFeedback(newCount)
   }
 
-  const handleBad= () => {
+  const handleBad = () => {
     const newCount = {
       ...feedback,
       bad: feedback.bad + 1,
@@ -36,30 +68,24 @@ const App = () => {
     setFeedback(newCount)
   }
 
-  const calculateAverage = () => {
-    const total = (feedback.good * 1) + (feedback.bad * -1)
-    const avg = total / feedback.clicks
-    return avg
-  }
-
-  const calculatePercentage = () => {
-    const positive = (feedback.good / feedback.clicks) * 100
-    return positive
+  const Button = ({ onClick, text }) => {
+    return (
+      <button onClick={onClick}>{text}</button>
+    )
   }
 
   return (
     <div>
       <h1>Give Feedback</h1>
-      <button onClick={handleGood}>Good</button>
-      <button onClick={handleNeutal}>Neutral</button>
-      <button onClick={handleBad}>Bad</button>
+      <Button onClick={handleGood} text="Good" />
+      <Button onClick={handleNeutral} text="Neutral" />
+      <Button onClick={handleBad} text="Bad" />
       <h1>Statistics</h1>
-      <p>Good: {feedback.good}</p>
-      <p>Neutral: {feedback.neutral}</p>
-      <p>Bad: {feedback.bad}</p>
-      <p>All: {feedback.clicks}</p>
-      <p>Average: {calculateAverage()}</p>
-      <p>Positive: {calculatePercentage()}%</p>
+      {feedback.clicks === 0 ? (
+        <WarningNoFeedback />
+      ) : (
+        <Staticts good={feedback.good} neutral={feedback.neutral} bad={feedback.bad} clicks={feedback.clicks} />
+      )}
     </div>
   )
 }
