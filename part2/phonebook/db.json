@@ -2,7 +2,7 @@
   "persons": [
     {
       "name": "Arto Hellas",
-      "number": "12121212121",
+      "number": "777777",
       "id": "1"
     },
     {
@@ -16,24 +16,9 @@
       "id": "3"
     },
     {
-      "name": "Mary Poppendieck",
-      "number": "213871231",
-      "id": "4"
-    },
-    {
-      "id": "9501",
-      "name": "Paula",
-      "number": "1232718631"
-    },
-    {
-      "id": "a79c",
-      "name": "Nuevo",
-      "number": "218739812731"
-    },
-    {
-      "id": "9c5e",
-      "name": "Test",
-      "number": "000000"
+      "id": "7aba",
+      "name": "Mary Poppins",
+      "number": "123456678"
     }
   ]
 }

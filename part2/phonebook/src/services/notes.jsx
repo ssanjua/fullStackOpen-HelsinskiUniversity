@@ -26,7 +26,7 @@ const deleteById = (id) => {
     method: 'DELETE',
   })
     .then(response => {
-      if(!response.ok) {
+      if (!response.ok) {
         throw new Error('failed')
       }
     })
@@ -40,17 +40,21 @@ const update = (id, updatedPerson) => {
     },
     body: JSON.stringify(updatedPerson),
   })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error('Failed to update person');
-    }
-    return response.json();
-  });
+    .then(response => {
+      if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error('Person not found');
+        } else {
+          throw new Error('Failed to update')
+        }
+      }
+      return response.json();
+    });
 };
 
 export default {
   getAll: getAll,
   create: create,
-  delete: deleteById, 
+  delete: deleteById,
   update: update,
 }

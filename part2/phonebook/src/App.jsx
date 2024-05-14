@@ -3,12 +3,15 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import noteService from './services/notes'
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
 
   useEffect(() => {
     noteService.getAll()
@@ -40,9 +43,16 @@ const App = () => {
             setPersons(persons.map(person => (person.id === existingPerson.id ? updatedPerson : person)))
             setNewName('')
             setNewNumber('')
+            setSuccessMessage(`contact: ${existingPerson.name} updated`)
+            setTimeout(() => {
+              setSuccessMessage(null)
+            }, 5000)
           })
           .catch(error => {
-            console.error('error updating', error)
+            setErrorMessage(`contact: ${existingPerson.name} has already been deleted`)
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000)
           })
       }
     } else {
@@ -50,12 +60,17 @@ const App = () => {
         name: newName,
         number: newNumber,
       };
-  
+
       noteService.create(nameObject)
         .then(data => {
           setPersons([...persons, nameObject]);
           setNewName('');
           setNewNumber('');
+          setSuccessMessage(`Contact: ${newName} has been added`);
+          setTimeout(() => {
+            setSuccessMessage(null);
+          }, 5000);
+          setErrorMessage(null);
         })
         .catch(error => console.error('Error:', error));
     }
@@ -73,11 +88,15 @@ const App = () => {
     setFilter(e.target.value)
   }
 
-  const handleDelete = (id) => {
+  const handleDelete = (id, name) => {
     if (window.confirm('are you sure?')) {
       noteService.delete(id)
         .then(() => {
           setPersons(persons.filter(person => person.id !== id))
+          setSuccessMessage(`contact: ${name} has been deleted`)
+          setTimeout(() => {
+            setSuccessMessage(null)
+          }, 5000)
         })
         .catch(error => {
           console.error('error deleting', error)
@@ -88,6 +107,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={errorMessage} type="error" />
+      <Notification message={successMessage} type="success" />
       <Filter value={filter} onChange={handleFilterChange} />
       <h2>Add a new</h2>
       <PersonForm
