@@ -1,20 +1,24 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
-
+import noteService from './services/notes'
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '040-123456', id: 1 },
-    { name: 'Ada Lovelace', number: '39-44-5323523', id: 2 },
-    { name: 'Dan Abramov', number: '12-43-234345', id: 3 },
-    { name: 'Mary Poppendieck', number: '39-23-6423122', id: 4 }
-  ])
-
+  const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+
+  useEffect(() => {
+    noteService.getAll()
+      .then(data => {
+        setPersons(data)
+      })
+      .catch(error => {
+        console.error('error fetching', error)
+      })
+  }, [])
 
   const namesFiltered = persons.filter(
     person => person.name
@@ -23,19 +27,39 @@ const App = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    if (persons.some(person => person.name === newName)) {
-      alert(`${newName} is already added to phonebook`)
-      return
+
+    const existingPerson = persons.find(person => person.name === newName)
+
+    if (existingPerson) {
+      const confirmMessage = `${newName} alredy exists, do you want to update the contact with this new number?`
+      if (window.confirm(confirmMessage)) {
+        const updatedPerson = { ...existingPerson, number: newNumber }
+
+        noteService.update(existingPerson.id, updatedPerson)
+          .then(() => {
+            setPersons(persons.map(person => (person.id === existingPerson.id ? updatedPerson : person)))
+            setNewName('')
+            setNewNumber('')
+          })
+          .catch(error => {
+            console.error('error updating', error)
+          })
+      }
+    } else {
+      const nameObject = {
+        name: newName,
+        number: newNumber,
+      };
+  
+      noteService.create(nameObject)
+        .then(data => {
+          setPersons([...persons, nameObject]);
+          setNewName('');
+          setNewNumber('');
+        })
+        .catch(error => console.error('Error:', error));
     }
-    const nameObject = {
-      name: newName,
-      number: newNumber,
-      id: persons.length + 1,
-    }
-    setPersons([...persons, nameObject])
-    setNewName('')
-    setNewNumber('')
-  }
+  };
 
   const handleNameChange = (e) => {
     setNewName(e.target.value)
@@ -47,6 +71,18 @@ const App = () => {
 
   const handleFilterChange = (e) => {
     setFilter(e.target.value)
+  }
+
+  const handleDelete = (id) => {
+    if (window.confirm('are you sure?')) {
+      noteService.delete(id)
+        .then(() => {
+          setPersons(persons.filter(person => person.id !== id))
+        })
+        .catch(error => {
+          console.error('error deleting', error)
+        })
+    }
   }
 
   return (
@@ -62,9 +98,7 @@ const App = () => {
         handleNumberChange={handleNumberChange}
       />
       <h2>Numbers</h2>
-      <Persons namesFiltered={namesFiltered}/>
-      
-      <div>debug: {newName}</div>
+      <Persons namesFiltered={namesFiltered} handleDelete={handleDelete} />
     </div>
   )
 }
