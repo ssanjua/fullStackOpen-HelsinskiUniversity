@@ -1,0 +1,9 @@
+PUT http://localhost:3000/api/persons/6647b34b6d93b9d41d7cbf47 HTTP/1.1
+Content-Type: application/json
+
+{
+  "name": "Morgan Freeman",
+  "number": "10000001"
+
+}
+
