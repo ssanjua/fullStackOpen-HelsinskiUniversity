@@ -5,6 +5,7 @@ const cors = require('cors')
 const Person = require('./models/Person')
 const notFound = require ('./middleware/notFound.js')
 const handleError = require ('./middleware/handleError.js')
+const validateNumber = require('./middleware/validateNumber.js')
 
 const app = express()
 app.use(express.json())
@@ -58,7 +59,7 @@ app.get('/api/persons/:id', (req, res) => {
 app.put("/api/persons/:id", (req, res, next) => {
   const { id } = req.params;
   const { name, number } = req.body;
-  console.log(`PUT Request ID: ${id}`);
+  console.log(`DELETE Request ID: ${id}`);
   if (!number) {
     return res.status(400).json({ error: 'number is missing' });
   }
@@ -76,7 +77,6 @@ app.put("/api/persons/:id", (req, res, next) => {
     .catch(error => next(error));
 });
 
-
 app.delete("/api/persons/:id", (req, res, next) => {
   const { id } = req.params;
   console.log(`DELETE Request ID: ${id}`);
@@ -93,8 +93,7 @@ app.delete("/api/persons/:id", (req, res, next) => {
     });
 });
 
-
-app.post('/api/persons', (req, res) => {
+app.post('/api/persons', validateNumber, (req, res) => {
   const body = req.body
   if (!body.name || !body.number) {
     return res.status(400).json({
