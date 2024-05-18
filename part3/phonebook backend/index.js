@@ -6,6 +6,7 @@ const Person = require('./models/Person')
 const notFound = require ('./middleware/notFound.js')
 const handleError = require ('./middleware/handleError.js')
 const validateNumber = require('./middleware/validateNumber.js')
+require('dotenv').config();
 
 const app = express()
 app.use(express.json())
