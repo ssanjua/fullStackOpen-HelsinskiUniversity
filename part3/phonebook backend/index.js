@@ -11,6 +11,7 @@ app.use(express.json())
 app.use(morgan('tiny'))
 app.use(cors())
 app.use(express.static('dist'))
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :postData'));
 
 app.get('/', (req, res) => {
   res.send('<h1>hello</h1>')
@@ -21,6 +22,14 @@ app.get('/api/persons', (req, res) => {
     res.json(persons)
   })
 })
+
+morgan.token('postData', (req, res) => {
+  if (req.method === 'POST') {
+    return JSON.stringify(req.body);
+  } else {
+    return '';
+  }
+});
 
 app.get('/info', (req, res) => {
   Person.countDocuments({}).then(count => {
@@ -49,7 +58,7 @@ app.get('/api/persons/:id', (req, res) => {
 app.put("/api/persons/:id", (req, res, next) => {
   const { id } = req.params;
   const { name, number } = req.body;
-
+  console.log(`PUT Request ID: ${id}`);
   if (!number) {
     return res.status(400).json({ error: 'number is missing' });
   }
@@ -68,22 +77,22 @@ app.put("/api/persons/:id", (req, res, next) => {
 });
 
 
-app.delete('/api/persons/:id', (req, res, next) => {
-  const { id } = req.params
-  Person.findByIdAndDelete(id).then(result => {
-    res.status(204).end()
-  }).catch(error => next(error))
-})
-
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms :postData'));
-
-morgan.token('postData', (req, res) => {
-  if (req.method === 'POST') {
-    return JSON.stringify(req.body);
-  } else {
-    return '';
-  }
+app.delete("/api/persons/:id", (req, res, next) => {
+  const { id } = req.params;
+  console.log(`DELETE Request ID: ${id}`);
+  Person.findByIdAndDelete(id)
+    .then((result) => {
+      if (result) {
+        res.sendStatus(204);
+      } else {
+        res.sendStatus(404);
+      }
+    })
+    .catch((e) => {
+      next(e);
+    });
 });
+
 
 app.post('/api/persons', (req, res) => {
   const body = req.body
