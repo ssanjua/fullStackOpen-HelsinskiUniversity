@@ -60,6 +60,7 @@ test('a valid blog can be added', async () => {
     author: 'Author 3',
     url: 'http://example.com/3',
     likes: 3,
+    userId: "664dfd2aff75a56b8c6900a7",
   };
 
   await api

@@ -3,7 +3,10 @@ const mongoose = require('mongoose');
 const { MONGODB_URI } = require('./utils/config');
 const blogsRouter = require('./controllers/blogs');
 const logger = require('./utils/logger');
+const errorHandler = require('./middleware/handleError')
 const usersRouter = require('./controllers/users')
+const loginRouter = require('./controllers/login')
+const middleware = require('./middleware/handleToken')
 
 const app = express();
 
@@ -17,15 +20,10 @@ mongoose.connect(MONGODB_URI, {
 });
 
 app.use(express.json())
-app.use('/api/blogs', blogsRouter)
+app.use(middleware.tokenExtractor)
+app.use('/api/blogs', middleware.tokenExtractor, blogsRouter)
 app.use('/api/users', usersRouter)
-
-const errorHandler = (error, request, response, next) => {
-  if (error.name === 'MongoServerError' && error.code === 11000) {
-    return response.status(400).json({ error: 'username must be unique' })
-  }
-  next(error)
-}
+app.use('/api/login', loginRouter)
 
 app.use(errorHandler)
 
