@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react'
+import React, { useState, useRef } from 'react'
 import Toggable from './Toggable'
 
 
@@ -72,4 +72,4 @@ const BlogForm = ({ addBlog }) => {
   )
 }
 
-export default BlogForm;
+export default BlogForm

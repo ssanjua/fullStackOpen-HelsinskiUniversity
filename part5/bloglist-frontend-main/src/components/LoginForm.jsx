@@ -1,5 +1,5 @@
 import React from 'react'
-import Toggable from './Toggable';
+import Toggable from './Toggable'
 
 const LoginForm = ({ handleSubmit, username, password, handlePasswordChange, handleUsernameChange }) => {
 
@@ -30,4 +30,4 @@ const LoginForm = ({ handleSubmit, username, password, handlePasswordChange, han
   )
 }
 
-export default LoginForm;
+export default LoginForm

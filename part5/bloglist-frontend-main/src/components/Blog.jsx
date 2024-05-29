@@ -1,6 +1,6 @@
-import React, { useRef, useState } from 'react';
-import Toggable from './Toggable';
-import blogService from '../services/blogs';
+import React, { useRef, useState } from 'react'
+import Toggable from './Toggable'
+import blogService from '../services/blogs'
 
 const Blog = ({ blog, user }) => {
 
@@ -10,7 +10,7 @@ const Blog = ({ blog, user }) => {
     border: 'solid',
     borderWidth: 1,
     marginBottom: 5
-  };
+  }
 
   const [updatedBlog, setUpdatedBlog] = useState(blog)
 
@@ -23,7 +23,7 @@ const Blog = ({ blog, user }) => {
   }
 
   const handleDelete = async () => {
-  const confirmDelete = window.confirm(`Do you want to delete ${updatedBlog.title} by ${updatedBlog.author}?`)
+    const confirmDelete = window.confirm(`Do you want to delete ${updatedBlog.title} by ${updatedBlog.author}?`)
     if (confirmDelete) {
       try {
         await blogService.deleteBlog(blog.id)
@@ -33,8 +33,6 @@ const Blog = ({ blog, user }) => {
     }
   }
 
-  console.log(user)
-
   return (
     <div style={blogStyle}>
       <span><strong>{blog.title}</strong></span>
@@ -43,12 +41,10 @@ const Blog = ({ blog, user }) => {
         <span>likes: {updatedBlog.likes}</span>
         <button onClick={handleLike}>like</button>
         <h3>{blog.author}</h3>
-        
-          <button onClick={handleDelete}>delete</button>
-      
+        <button onClick={handleDelete}>delete</button>
       </Toggable>
     </div>
   )
 }
 
-export default Blog;
+export default Blog

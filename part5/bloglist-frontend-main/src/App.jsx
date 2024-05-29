@@ -13,7 +13,7 @@ const App = () => {
   const [user, setUser] = useState(null)
 
   const [errorMessage, setErrorMessage] = useState(null)
-  const [successMessage, setSuccessMessage] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -47,10 +47,10 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
-      setSuccessMessage(`${username} logged in`);
+      setSuccessMessage(`${username} logged in`)
       setTimeout(() => {
-        setSuccessMessage(null);
-      }, 5000);
+        setSuccessMessage(null)
+      }, 5000)
     } catch (error) {
       setErrorMessage('wrong credentials')
       setTimeout(() => {
@@ -61,10 +61,10 @@ const App = () => {
 
   const handleLogout = () => {
     setUser(null)
-    setSuccessMessage(`logged out`);
+    setSuccessMessage('logged out')
     setTimeout(() => {
-      setSuccessMessage(null);
-    }, 5000);
+      setSuccessMessage(null)
+    }, 5000)
     window.localStorage.removeItem('loggedUser')
   }
 
@@ -73,40 +73,40 @@ const App = () => {
       .create(blogObject)
       .then(returnedBlog => {
         setBlogs(blogs.concat(returnedBlog))
-        setSuccessMessage(`a new blog has been added`);
+        setSuccessMessage('a new blog has been added')
         setTimeout(() => {
-          setSuccessMessage(null);
-        }, 5000);
+          setSuccessMessage(null)
+        }, 5000)
       })
   }
 
   return (
     <div>
-    <h2>blogs</h2>
-    <Notification message={errorMessage} type="error" />
-    <Notification message={successMessage} type="success" />
+      <h2>blogs</h2>
+      <Notification message={errorMessage} type="error" />
+      <Notification message={successMessage} type="success" />
 
-    {user === null ? (
-      <LoginForm 
-        username={username}
-        password={password}
-        handlePasswordChange={({target}) => setPassword(target.value)}
-        handleUsernameChange={({target}) => setUsername(target.value)}
-        handleSubmit={handleLogin}
-      />
-    ) : (
-      <>
-        <button onClick={handleLogout}>Logout</button>
-        <p>
-          <span>{user.name} logged in </span>
-        </p>
-        {user !== null && <BlogForm addBlog={addBlog} />}
-        {blogs.map(blog => (
-          <Blog user={user} key={blog.id} blog={blog} />
-        ))}
-      </>
-    )}
-  </div>
+      {user === null ? (
+        <LoginForm
+          username={username}
+          password={password}
+          handlePasswordChange={({ target }) => setPassword(target.value)}
+          handleUsernameChange={({ target }) => setUsername(target.value)}
+          handleSubmit={handleLogin}
+        />
+      ) : (
+        <>
+          <button onClick={handleLogout}>Logout</button>
+          <p>
+            <span>{user.name} logged in </span>
+          </p>
+          {user !== null && <BlogForm addBlog={addBlog} />}
+          {blogs.map(blog => (
+            <Blog user={user} key={blog.id} blog={blog} />
+          ))}
+        </>
+      )}
+    </div>
   )
 }
 
