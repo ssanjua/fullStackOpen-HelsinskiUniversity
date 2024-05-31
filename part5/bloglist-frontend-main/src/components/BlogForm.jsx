@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react'
 import Toggable from './Toggable'
 
-
 const BlogForm = ({ addBlog }) => {
   const [newTitle, setNewTitle] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
@@ -40,6 +39,7 @@ const BlogForm = ({ addBlog }) => {
         <div>
           title:
           <input
+            data-testid="input-title"
             type='text'
             value={newTitle}
             name='title'
@@ -49,6 +49,7 @@ const BlogForm = ({ addBlog }) => {
         <div>
           author:
           <input
+            data-testid="input-author"
             type='text'
             value={newAuthor}
             name='author'
@@ -58,13 +59,16 @@ const BlogForm = ({ addBlog }) => {
         <div>
           url:
           <input
+            data-testid="input-url"
             type='text'
             value={newUrl}
             name='url'
             onChange={handleChange}
           />
         </div>
-        <button type='submit'>
+        <button
+          data-testid="button-submit"
+          type='submit'>
           create
         </button>
       </form>
