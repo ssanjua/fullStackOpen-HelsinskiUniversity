@@ -24,7 +24,7 @@ const LoginForm = ({ handleSubmit, username, password, handlePasswordChange, han
             onChange={handlePasswordChange}
           />
         </div>
-        <button type="submit">login</button>
+        <button id="login-button" type="submit">login</button>
       </form>
     </Toggable>
   )
