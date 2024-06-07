@@ -42,22 +42,20 @@ blogRouter.post('/', userExtractor, async (request, response, next) => {
   }
 })
 
-blogRouter.delete('/:id', userExtractor, async (request, response, next) => {
-  
-  try {
+blogRouter.delete("/:id", userExtractor, async (request, response) => {
+  try {    
     const blog = await Blog.findById(request.params.id)
     if (!blog) {
-      return response.status(404).json({ error: 'blog not found' })
+      return response.status(404).json({ message: "Blog not found" })
     }
-
-    if (blog.user.toString() !== request.user.id.toString()) {
-      return response.status(403).json({ error: 'only the creator can delete this blog' })
+    if (blog.user.toString() === request.userId) {
+      await Blog.findByIdAndDelete(request.params.id)
+      return response.status(204).end()
     }
-
-    await Blog.findByIdAndDelete(request.params.id)
-    response.status(204).end()
+    return response.status(403).json({ error: "Unauthorized access" })
   } catch (error) {
-    next(error)
+    console.error('Error deleting blog:', error)
+    return response.status(500).json({ error: 'Internal server error' })
   }
 })
 

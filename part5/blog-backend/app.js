@@ -7,6 +7,7 @@ const errorHandler = require('./middleware/handleError')
 const usersRouter = require('./controllers/users')
 const loginRouter = require('./controllers/login')
 const middleware = require('./middleware/handleToken')
+const testingRouter = require('./controllers/testRouter')
 
 const app = express();
 

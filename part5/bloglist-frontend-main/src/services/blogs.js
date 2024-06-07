@@ -30,11 +30,16 @@ const updateLikes = async (id, updatedBlog) => {
 }
 
 const deleteBlog = async (id) => {
-  const config = {
-    headers: { Authorization: token },
+  try {
+    const config = {
+      headers: { Authorization: token },
+    }
+    const response = await axios.delete(`${baseUrl}/${id}`, config)
+    return response.data
+  } catch (error) {
+    console.error('Error in deleteBlog:', error)
+    throw error
   }
-  const response = await axios.delete(`${baseUrl}/${id}`, config)
-  return response.data
 }
 
 export default { getAll, create, setToken, updateLikes, deleteBlog }

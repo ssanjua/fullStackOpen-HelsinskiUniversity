@@ -68,6 +68,27 @@ const App = () => {
     window.localStorage.removeItem('loggedUser')
   }
 
+  const handleDelete = async (id) => {
+    const blogToDelete = blogs.find(blog => blog.id === id)
+    const confirmDelete = window.confirm(`Do you want to delete ${blogToDelete.title} by ${blogToDelete.author}?`)
+    if (confirmDelete) {
+      try {
+        await blogService.deleteBlog(id)
+        setBlogs(blogs.filter(blog => blog.id !== id))
+        setSuccessMessage('post deleted')
+        setTimeout(() => {
+          setSuccessMessage(null)
+        }, 5000)
+      } catch (error) {
+        console.error('Failed to delete blog:', error.response?.data || error.message)
+      }
+    }
+  }
+
+  const sortBlogsByLikes = (blogs) => {
+    return blogs.slice().sort((a, b) => b.likes - a.likes)
+  }
+
   const addBlog = (blogObject) => {
     blogService
       .create(blogObject)
@@ -101,8 +122,8 @@ const App = () => {
             <span>{user.name} logged in </span>
           </p>
           {user !== null && <BlogForm addBlog={addBlog} />}
-          {blogs.map(blog => (
-            <Blog user={user} key={blog.id} blog={blog} />
+          {sortBlogsByLikes(blogs).map(blog => (
+            <Blog user={user} key={blog.id} blog={blog} username={user.username} handleDelete={() => handleDelete(blog.id)} />
           ))}
         </>
       )}

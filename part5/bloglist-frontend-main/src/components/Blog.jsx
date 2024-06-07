@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, handleDelete, username }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -17,17 +17,6 @@ const Blog = ({ blog }) => {
     const updatedBlogData = { ...updatedBlog, likes: updatedBlog.likes + 1 }
     await blogService.updateLikes(updatedBlog.id, updatedBlogData)
     setUpdatedBlog(updatedBlogData)
-  }
-
-  const handleDelete = async () => {
-    const confirmDelete = window.confirm(`Do you want to delete ${updatedBlog.title} by ${updatedBlog.author}?`)
-    if (confirmDelete) {
-      try {
-        await blogService.deleteBlog(blog.id)
-      } catch (error) {
-        console.error('Failed to delete blog:', error)
-      }
-    }
   }
 
   return (
@@ -51,9 +40,11 @@ const Blog = ({ blog }) => {
             Likes {updatedBlog.likes}{' '}
             <button onClick={handleLike} data-testid="button-like">Like</button>
           </p>
-          <button data-testid="blog-remove" onClick={handleDelete}>
-            Remove
-          </button>
+          {updatedBlog.user.username === username && (
+            <button data-testid="blog-remove" onClick={handleDelete}>
+              Remove
+            </button>
+          )}
         </div>
       )}
     </div>
