@@ -30,6 +30,8 @@ const reducer = (state = initialState, action) => {
         }
         return e
       })
+      case 'ADD':
+        return [...state, asObject(action.payload.anecdote)]
     default:
       return state
   }

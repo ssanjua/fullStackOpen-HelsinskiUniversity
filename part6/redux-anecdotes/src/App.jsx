@@ -13,10 +13,22 @@ const App = () => {
     payload: id
   })
 
+  const addNote = (e) => {
+    e.preventDefault()
+    const anecdote = e.target.anecdote.value
+    if(anecdote.length > 3) {
+      dispatch({ type: 'ADD', payload: { anecdote} })
+    } else {
+      return
+    }
+  }
+
+  const sortedNotes = [...anecdotes].sort((a, b) => b.votes - a.votes)
+
   return (
     <div>
       <h2>Anecdotes</h2>
-      {anecdotes.map(anecdote =>
+      {sortedNotes.map(anecdote =>
         <div key={anecdote.id}>
           <div>
             {anecdote.content}
@@ -28,9 +40,9 @@ const App = () => {
         </div>
       )}
       <h2>create new</h2>
-      <form>
-        <div><input /></div>
-        <button>create</button>
+      <form onSubmit={addNote}>
+        <div><input name='anecdote' /></div>
+        <button type='submit'>create</button>
       </form>
     </div>
   )
