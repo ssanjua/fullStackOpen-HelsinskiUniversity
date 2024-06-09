@@ -1,7 +1,6 @@
 import { useSelector, useDispatch } from "react-redux"
-import { incrementVote, appendAnecdote } from "../reducers/anecdoteReducer"
-import { notify, removeNotification } from "../reducers/notificationReducer"
-import services from "../services/anecdote"
+import { initialAnecdotes, incrementVoteAnecdote } from "../reducers/anecdoteReducer"
+import { setNotification } from "../reducers/notificationReducer"
 import { useEffect } from "react"
 
 
@@ -17,24 +16,16 @@ export default function AnecdoteList() {
   const dispatch = useDispatch()
 
   const vote = (anecdote) => {
-    dispatch(notify(`you voted ${anecdote.content}`))
-    setTimeout(() => {
-      dispatch(removeNotification())
-    }, 5000)
-    dispatch(incrementVote(anecdote.id))
+    dispatch(setNotification(`you voted ${anecdote.content}`, 2000))
+    dispatch(incrementVoteAnecdote({ id: anecdote.id, vote: anecdote.votes }))
   }
 
   const sortedAnecdote = [...anecdotes].sort((a, b) => b.votes - a.votes)
 
-  async function fetchAnecdotes() {
-    const res = await services.getAll()
-    dispatch(appendAnecdote(res))
-  }
 
   useEffect(() => {
-    fetchAnecdotes()
-  }, [])
-
+    dispatch(initialAnecdotes())
+  }, []) // eslint-disable-line
 
   return (
     <>
