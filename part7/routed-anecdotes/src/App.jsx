@@ -15,6 +15,7 @@ import Footer from './components/Footer'
 import CreateNew from './components/CreateNew'
 import Notification from './components/Notification'
 
+
 const App = () => {
   const [anecdotes, setAnecdotes] = useState([
     {
@@ -52,7 +53,6 @@ const App = () => {
     ? anecdotes.find(anecdote => anecdote.id === Number(match.params.id))
     : null
 
-
   const vote = (id) => {
     const anecdote = anecdoteById(id)
 
@@ -60,7 +60,6 @@ const App = () => {
       ...anecdote,
       votes: anecdote.votes + 1
     }
-
     setAnecdotes(anecdotes.map(a => a.id === id ? voted : a))
   }
 
