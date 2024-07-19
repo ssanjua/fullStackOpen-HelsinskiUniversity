@@ -1,28 +1,26 @@
 const mongoose = require("mongoose");
 const supertest = require("supertest");
 const app = require("../app");
-const testHelper = require('./test_helper')
+const testHelper = require("./test_helper");
 const Blog = require("../models/blog");
 const api = supertest(app);
 
-let token = ""
+let token = "";
 
 beforeEach(async () => {
   await Blog.deleteMany({});
-  const id = await testHelper.InsertTestBlogs()
-  token = await testHelper.getJwtTokken(id)
+  const id = await testHelper.InsertTestBlogs();
+  token = await testHelper.getJwtTokken(id);
 });
 
-
 test("Blogs are returned as json", async () => {
-  const token = await testHelper.getJwtTokken()
+  const token = await testHelper.getJwtTokken();
   await api
     .get("/api/blogs")
-    .set('Authorization', `Bearer ${token}`)
+    .set("Authorization", `Bearer ${token}`)
     .expect(200)
     .expect("Content-Type", /application\/json/);
 });
-
 
 test("Blog without token should return 401", async () => {
   const postData = {
@@ -32,10 +30,12 @@ test("Blog without token should return 401", async () => {
     likes: "69",
   };
   await api.post("/api/blogs").send(postData).expect(401);
-})
+});
 
 test("Blogs json should have a unique identifier", async () => {
-  (await api.get("/api/blogs").set('Authorization', `Bearer ${token}`)).body.forEach((doc) => {
+  (
+    await api.get("/api/blogs").set("Authorization", `Bearer ${token}`)
+  ).body.forEach((doc) => {
     expect(doc.id).toBeDefined();
   });
 });
@@ -50,12 +50,17 @@ test("testing blog post method", async () => {
     likes: "69",
   };
 
-  await api.post("/api/blogs").set('Authorization', `Bearer ${token}`).send(postData).expect(201);
+  await api
+    .post("/api/blogs")
+    .set("Authorization", `Bearer ${token}`)
+    .send(postData)
+    .expect(201);
 
-  const LenAfterInsert = (await api.get("/api/blogs").set('Authorization', `Bearer ${token}`)).body.length;
+  const LenAfterInsert = (
+    await api.get("/api/blogs").set("Authorization", `Bearer ${token}`)
+  ).body.length;
 
   expect(LenAfterInsert).toBe(LenBeforeInsert + 1);
-
 });
 
 test("when like prop is not supplied it will default to zero", async () => {
@@ -65,7 +70,11 @@ test("when like prop is not supplied it will default to zero", async () => {
     url: "example",
   };
 
-  const result = await api.post("/api/blogs").set('Authorization', `Bearer ${token}`).send(postData).expect(201);
+  const result = await api
+    .post("/api/blogs")
+    .set("Authorization", `Bearer ${token}`)
+    .send(postData)
+    .expect(201);
   expect(result.body.likes).toBe(0);
 });
 
@@ -78,22 +87,36 @@ test("Expect 422 when title or url missing in post data", async () => {
     title: "sampledasdasd",
     author: "xd",
   };
-  await api.post("/api/blogs").set('Authorization', `Bearer ${token}`).send(postData).expect(422);
-  await api.post("/api/blogs").set('Authorization', `Bearer ${token}`).send(_postData).expect(422);
+  await api
+    .post("/api/blogs")
+    .set("Authorization", `Bearer ${token}`)
+    .send(postData)
+    .expect(422);
+  await api
+    .post("/api/blogs")
+    .set("Authorization", `Bearer ${token}`)
+    .send(_postData)
+    .expect(422);
 });
 
 describe("deletion of a blog", () => {
   test("succeeds with status code 204 if id is valid", async () => {
     const blogsAtStart = await testHelper.blogsInDb();
     const blogToDelete = blogsAtStart[0];
-    await api.delete(`/api/blogs/${blogToDelete.id}`).set('Authorization', `Bearer ${token}`).expect(204);
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(204);
     const blogsAtEnd = await testHelper.blogsInDb();
     expect(blogsAtEnd).toHaveLength(testHelper.initialBlogs.length - 1);
   });
 
   test("404 if id not exist in db", async () => {
     const id = await testHelper.nonExistingId();
-    await api.delete(`/api/blogs/${id}`).set('Authorization', `Bearer ${token}`).expect(404);
+    await api
+      .delete(`/api/blogs/${id}`)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(404);
   });
 });
 
@@ -103,7 +126,8 @@ describe("updation of a blog", () => {
     const blogToUpdate = blogsAtStart[0];
     blogToUpdate.title = "this part is updated";
     await api
-      .put(`/api/blogs/${blogToUpdate.id}`).set('Authorization', `Bearer ${token}`)
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .set("Authorization", `Bearer ${token}`)
       .send(blogToUpdate)
       .expect(200);
   });
@@ -115,7 +139,11 @@ describe("updation of a blog", () => {
       author: "xd",
       url: "example",
     };
-    await api.put(`/api/blogs/${id}`).set('Authorization', `Bearer ${token}`).send(postData).expect(404);
+    await api
+      .put(`/api/blogs/${id}`)
+      .set("Authorization", `Bearer ${token}`)
+      .send(postData)
+      .expect(404);
   });
 });
 

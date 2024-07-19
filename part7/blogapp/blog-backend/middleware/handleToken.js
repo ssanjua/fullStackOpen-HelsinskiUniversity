@@ -1,42 +1,42 @@
-const jwt = require('jsonwebtoken')
-require('dotenv').config()
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 const tokenExtractor = (request, response, next) => {
-  const authorization = request.get('authorization')
-  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
-    request.token = authorization.substring(7)
+  const authorization = request.get("authorization");
+  if (authorization && authorization.toLowerCase().startsWith("bearer ")) {
+    request.token = authorization.substring(7);
   } else {
-    request.token = null
+    request.token = null;
   }
-  next()
-}
+  next();
+};
 
 const userExtractor = (request, response, next) => {
-  const authorization = request.get('authorization')
-  let token = ''
+  const authorization = request.get("authorization");
+  let token = "";
 
-  if (authorization && authorization.toLowerCase().startsWith('bearer')) {
-    token = authorization.substring(7)
-  } 
+  if (authorization && authorization.toLowerCase().startsWith("bearer")) {
+    token = authorization.substring(7);
+  }
 
-  let decodedToken = {}
+  let decodedToken = {};
   try {
-    decodedToken = jwt.verify(token, process.env.SECRET)
+    decodedToken = jwt.verify(token, process.env.SECRET);
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-  
+
   if (!token || !decodedToken.id) {
-    return response.status(401).json({ error: 'token missing or invalid' })
+    return response.status(401).json({ error: "token missing or invalid" });
   }
 
-  const { id: userId } = decodedToken
-  request.userId = userId
+  const { id: userId } = decodedToken;
+  request.userId = userId;
 
-  next()
-}
+  next();
+};
 
 module.exports = {
   tokenExtractor,
   userExtractor,
-}
+};

@@ -1,6 +1,11 @@
-import React from 'react'
-const LoginForm = ({ handleLogin, username, password, handlePasswordChange, handleUsernameChange }) => {
-
+import React from "react";
+const LoginForm = ({
+  handleLogin,
+  username,
+  password,
+  handlePasswordChange,
+  handleUsernameChange,
+}) => {
   return (
     <div>
       <form onSubmit={handleLogin}>
@@ -24,8 +29,8 @@ const LoginForm = ({ handleLogin, username, password, handlePasswordChange, hand
         </div>
         <button type="submit">login</button>
       </form>
-      </div>
-  )
-}
+    </div>
+  );
+};
 
 export default LoginForm;

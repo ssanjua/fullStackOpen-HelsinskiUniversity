@@ -1,7 +1,7 @@
-const Blog = require('../models/blog')
-const User = require('../models/user')
-const jwt = require("jsonwebtoken")
-const { SECRET } = require("../utils/config")
+const Blog = require("../models/blog");
+const User = require("../models/user");
+const jwt = require("jsonwebtoken");
+const { SECRET } = require("../utils/config");
 
 const initialBlogs = [
   {
@@ -67,21 +67,21 @@ const initialBlogs = [
 ];
 
 const usersInDb = async () => {
-  const users = await User.find({})
-  return users.map(user => user.toJSON())
-}
+  const users = await User.find({});
+  return users.map((user) => user.toJSON());
+};
 
 const blogsInDb = async () => {
-  const blogs = await Blog.find({})
-  return blogs.map(blog => blog.toJSON())
-}
+  const blogs = await Blog.find({});
+  return blogs.map((blog) => blog.toJSON());
+};
 
 const InsertTestBlogs = async () => {
   const id = await getTestUserId();
-  const initialBlogsArr = initialBlogs.map(e => ({ ...e, user: id }))
+  const initialBlogsArr = initialBlogs.map((e) => ({ ...e, user: id }));
   await Blog.insertMany(initialBlogsArr);
-  return id
-}
+  return id;
+};
 
 const nonExistingId = async () => {
   const blog = new Blog({
@@ -97,22 +97,22 @@ const nonExistingId = async () => {
 };
 
 async function getTestUserId() {
-  const testuser = await User.findOne({ username: "testuser" })
+  const testuser = await User.findOne({ username: "testuser" });
   if (!testuser) {
     const user = new User({
       username: "testuser",
       name: "test",
-      password: "qwerty"
-    })
+      password: "qwerty",
+    });
     const result = await user.save();
-    return result.id
+    return result.id;
   }
-  return testuser.id
+  return testuser.id;
 }
 
 async function getJwtTokken(id) {
-  const userobj = await User.findById(id)
-  if(userobj){
+  const userobj = await User.findById(id);
+  if (userobj) {
     const tokenPayload = {
       username: userobj.username,
       id: userobj.id,
@@ -121,12 +121,11 @@ async function getJwtTokken(id) {
   }
 }
 
-
 module.exports = {
-  usersInDb, 
+  usersInDb,
   initialBlogs,
   nonExistingId,
   blogsInDb,
   InsertTestBlogs,
-  getJwtTokken
-}
+  getJwtTokken,
+};

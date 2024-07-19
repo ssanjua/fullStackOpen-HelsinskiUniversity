@@ -1,48 +1,52 @@
-import React, { useState, useRef } from 'react'
-import Toggable from './Toggable'
+import React, { useState, useRef } from "react";
+import Toggable from "./Toggable";
 
 const BlogForm = ({ addBlog }) => {
-  const [newTitle, setNewTitle] = useState('')
-  const [newAuthor, setNewAuthor] = useState('')
-  const [newUrl, setNewUrl] = useState('')
+  const [newTitle, setNewTitle] = useState("");
+  const [newAuthor, setNewAuthor] = useState("");
+  const [newUrl, setNewUrl] = useState("");
 
-  const toggableRef = useRef()
+  const toggableRef = useRef();
 
   const handleChange = (event) => {
-    const { name, value } = event.target
-    if (name === 'title') setNewTitle(value)
-    else if (name === 'author') setNewAuthor(value)
-    else if (name === 'url') setNewUrl(value)
-  }
+    const { name, value } = event.target;
+    if (name === "title") setNewTitle(value);
+    else if (name === "author") setNewAuthor(value);
+    else if (name === "url") setNewUrl(value);
+  };
 
   const handleSubmit = (event) => {
-    event.preventDefault()
+    event.preventDefault();
 
     const blogObject = {
       title: newTitle,
       author: newAuthor,
       url: newUrl,
-      likes: 0
-    }
+      likes: 0,
+    };
 
-    addBlog(blogObject)
-    setNewAuthor('')
-    setNewTitle('')
-    setNewUrl('')
-    toggableRef.current.toggleVisibility()
-  }
+    addBlog(blogObject);
+    setNewAuthor("");
+    setNewTitle("");
+    setNewUrl("");
+    toggableRef.current.toggleVisibility();
+  };
 
   return (
-    <Toggable buttonLabel='create new post' cancelLabel='cancel' ref={toggableRef} >
+    <Toggable
+      buttonLabel="create new post"
+      cancelLabel="cancel"
+      ref={toggableRef}
+    >
       <h3>new blog post:</h3>
       <form onSubmit={handleSubmit}>
         <div>
           title:
           <input
             data-testid="input-title"
-            type='text'
+            type="text"
             value={newTitle}
-            name='title'
+            name="title"
             onChange={handleChange}
           />
         </div>
@@ -50,9 +54,9 @@ const BlogForm = ({ addBlog }) => {
           author:
           <input
             data-testid="input-author"
-            type='text'
+            type="text"
             value={newAuthor}
-            name='author'
+            name="author"
             onChange={handleChange}
           />
         </div>
@@ -60,20 +64,18 @@ const BlogForm = ({ addBlog }) => {
           url:
           <input
             data-testid="input-url"
-            type='text'
+            type="text"
             value={newUrl}
-            name='url'
+            name="url"
             onChange={handleChange}
           />
         </div>
-        <button
-          data-testid="button-submit"
-          type='submit'>
+        <button data-testid="button-submit" type="submit">
           create
         </button>
       </form>
     </Toggable>
-  )
-}
+  );
+};
 
-export default BlogForm
+export default BlogForm;

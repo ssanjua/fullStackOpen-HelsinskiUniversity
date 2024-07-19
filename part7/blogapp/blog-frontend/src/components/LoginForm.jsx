@@ -1,10 +1,15 @@
-import React from 'react'
-import Toggable from './Toggable'
+import React from "react";
+import Toggable from "./Toggable";
 
-const LoginForm = ({ handleSubmit, username, password, handlePasswordChange, handleUsernameChange }) => {
-
+const LoginForm = ({
+  handleSubmit,
+  username,
+  password,
+  handlePasswordChange,
+  handleUsernameChange,
+}) => {
   return (
-    <Toggable buttonLabel='show login' cancelLabel='cancel'>
+    <Toggable buttonLabel="show login" cancelLabel="cancel">
       <form onSubmit={handleSubmit}>
         <div>
           username
@@ -24,10 +29,12 @@ const LoginForm = ({ handleSubmit, username, password, handlePasswordChange, han
             onChange={handlePasswordChange}
           />
         </div>
-        <button id="login-button" type="submit">login</button>
+        <button id="login-button" type="submit">
+          login
+        </button>
       </form>
     </Toggable>
-  )
-}
+  );
+};
 
-export default LoginForm
+export default LoginForm;

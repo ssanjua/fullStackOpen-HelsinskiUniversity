@@ -1,23 +1,23 @@
-import React, { useRef, useState } from 'react'
-import blogService from '../services/blogs'
+import React, { useRef, useState } from "react";
+import blogService from "../services/blogs";
 
 const Blog = ({ blog, handleDelete, username }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
-    border: 'solid',
+    border: "solid",
     borderWidth: 1,
-    marginBottom: 5
-  }
+    marginBottom: 5,
+  };
 
-  const [updatedBlog, setUpdatedBlog] = useState(blog)
-  const [showDetail, setShowDetail] = useState(false)
+  const [updatedBlog, setUpdatedBlog] = useState(blog);
+  const [showDetail, setShowDetail] = useState(false);
 
   const handleLike = async () => {
-    const updatedBlogData = { ...updatedBlog, likes: updatedBlog.likes + 1 }
-    await blogService.updateLikes(updatedBlog.id, updatedBlogData)
-    setUpdatedBlog(updatedBlogData)
-  }
+    const updatedBlogData = { ...updatedBlog, likes: updatedBlog.likes + 1 };
+    await blogService.updateLikes(updatedBlog.id, updatedBlogData);
+    setUpdatedBlog(updatedBlogData);
+  };
 
   return (
     <div style={blogStyle}>
@@ -27,18 +27,23 @@ const Blog = ({ blog, handleDelete, username }) => {
         </h3>
         <p data-testid="blog-author">by {updatedBlog.author}</p>
         <div>
-          <button data-testid="toggleButton" onClick={() => setShowDetail(!showDetail)}>
-            {showDetail ? 'Hide' : 'View'}
+          <button
+            data-testid="toggleButton"
+            onClick={() => setShowDetail(!showDetail)}
+          >
+            {showDetail ? "Hide" : "View"}
           </button>
         </div>
       </div>
 
       {showDetail && (
-        <div style={{ display: 'block' }}>
+        <div style={{ display: "block" }}>
           <p data-testid="blog-url">{updatedBlog.url}</p>
           <p data-testid="blog-likes">
-            Likes {updatedBlog.likes}{' '}
-            <button onClick={handleLike} data-testid="button-like">Like</button>
+            Likes {updatedBlog.likes}{" "}
+            <button onClick={handleLike} data-testid="button-like">
+              Like
+            </button>
           </p>
           {updatedBlog.user.username === username && (
             <button data-testid="blog-remove" onClick={handleDelete}>
@@ -48,7 +53,7 @@ const Blog = ({ blog, handleDelete, username }) => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default Blog
+export default Blog;
