@@ -5,8 +5,9 @@ import loginService from "./services/login"
 import Notification from "./components/Notification"
 import LoginForm from "./components/LoginForm"
 import BlogForm from "./components/BlogForm"
-import { setNotification, clearNotification } from './reducers/notificationReducer'
+import { setNotification } from './reducers/notificationReducer'
 import { useDispatch } from 'react-redux'
+import { setBlogs, addBlog } from './reducers/blogReducer'
 
 
 const App = () => {
@@ -18,8 +19,10 @@ const App = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs))
-  }, [])
+    blogService.getAll().then((blogs) => {
+      dispatch(setBlogs(blogs))
+    })
+  }, [dispatch])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedUser");
@@ -31,37 +34,28 @@ const App = () => {
   }, [])
 
   const handleLogin = async (event) => {
-    event.preventDefault();
+    event.preventDefault()
 
     try {
-      const user = await loginService.login({ username, password });
+      const user = await loginService.login({ username, password })
 
-      window.localStorage.setItem("loggedUser", JSON.stringify(user));
+      window.localStorage.setItem("loggedUser", JSON.stringify(user))
 
-      blogService.setToken(user.token);
-      setUser(user);
-      setUsername("");
-      setPassword("");
-      dispatch(setNotification(`${username} logged in`, "success"));
-      setTimeout(() => {
-        dispatch(clearNotification());
-      }, 5000);
+      blogService.setToken(user.token)
+      setUser(user)
+      setUsername("")
+      setPassword("")
+      dispatch(setNotification({ message: `${username} logged in`, type: "success" }))
     } catch (error) {
-      dispatch(setNotification("wrong credentials", "error"));
-      setTimeout(() => {
-        dispatch(clearNotification());
-      }, 5000);
+      dispatch(setNotification({ message: "wrong credentials", type: "error" }))
     }
-  };
+  }
 
   const handleLogout = () => {
     setUser(null);
-    dispatch(setNotification("logged out", "success"));
-    setTimeout(() => {
-      dispatch(clearNotification());
-    }, 5000);
-    window.localStorage.removeItem("loggedUser");
-  };
+    dispatch(setNotification({ message: "logged out", type: "success" }))
+    window.localStorage.removeItem("loggedUser")
+  }
 
   const handleDelete = async (id) => {
     const blogToDelete = blogs.find((blog) => blog.id === id);
@@ -70,28 +64,22 @@ const App = () => {
       try {
         await blogService.deleteBlog(id);
         setBlogs(blogs.filter((blog) => blog.id !== id));
-        dispatch(setNotification("post deleted", "success"));
-        setTimeout(() => {
-          dispatch(clearNotification());
-        }, 5000);
+        dispatch(setNotification({ message: "post deleted", type: "success" }))
       } catch (error) {
         console.error("Failed to delete blog:", error.response?.data || error.message);
       }
     }
-  };
+  }
 
   const sortBlogsByLikes = (blogs) => {
-    return blogs.slice().sort((a, b) => b.likes - a.likes);
-  };
+    return blogs.slice().sort((a, b) => b.likes - a.likes)
+  }
 
   const addBlog = (blogObject) => {
     blogService.create(blogObject).then((returnedBlog) => {
-      setBlogs(blogs.concat(returnedBlog));
-      dispatch(setNotification("a new blog has been added", "success"));
-      setTimeout(() => {
-        dispatch(clearNotification());
-      }, 5000);
-    });
+      setBlogs(blogs.concat(returnedBlog))
+      dispatch(setNotification({ message: "a new blog has been added", type: "success" }))
+    })
   }
 
   return (

@@ -2,9 +2,9 @@ import "./Notification.css"
 import { useSelector } from 'react-redux'
 
 const Notification = () => {
-  const notification = useSelector(state => state.notification)
+  const notification = useSelector(state => state.notification);
 
-  if (notification.message === null) {
+  if (!notification.message) {
     return null
   }
 
