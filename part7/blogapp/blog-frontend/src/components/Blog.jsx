@@ -1,7 +1,8 @@
-import React, { useRef, useState } from "react";
-import blogService from "../services/blogs";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { likeBlog, deleteBlog } from "../reducers/blogReducer";
 
-const Blog = ({ blog, handleDelete, username }) => {
+const Blog = ({ blog, username }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -10,22 +11,28 @@ const Blog = ({ blog, handleDelete, username }) => {
     marginBottom: 5,
   };
 
-  const [updatedBlog, setUpdatedBlog] = useState(blog);
   const [showDetail, setShowDetail] = useState(false);
+  const dispatch = useDispatch();
 
-  const handleLike = async () => {
-    const updatedBlogData = { ...updatedBlog, likes: updatedBlog.likes + 1 };
-    await blogService.updateLikes(updatedBlog.id, updatedBlogData);
-    setUpdatedBlog(updatedBlogData);
+  const handleLike = () => {
+    console.log("Like button clicked for blog:", blog.id);
+    dispatch(likeBlog(blog.id));
+  };
+
+  const handleDelete = () => {
+    const confirmDelete = window.confirm(`Do you want to delete ${blog.title} by ${blog.author}?`);
+    if (confirmDelete) {
+      dispatch(deleteBlog(blog.id));
+    }
   };
 
   return (
     <div style={blogStyle}>
       <div>
         <h3>
-          <strong data-testid="blog-title">{updatedBlog.title}</strong>
+          <strong data-testid="blog-title">{blog.title}</strong>
         </h3>
-        <p data-testid="blog-author">by {updatedBlog.author}</p>
+        <p data-testid="blog-author">by {blog.author}</p>
         <div>
           <button
             data-testid="toggleButton"
@@ -38,14 +45,14 @@ const Blog = ({ blog, handleDelete, username }) => {
 
       {showDetail && (
         <div style={{ display: "block" }}>
-          <p data-testid="blog-url">{updatedBlog.url}</p>
+          <p data-testid="blog-url">{blog.url}</p>
           <p data-testid="blog-likes">
-            Likes {updatedBlog.likes}{" "}
+            Likes {blog.likes}{" "}
             <button onClick={handleLike} data-testid="button-like">
               Like
             </button>
           </p>
-          {updatedBlog.user.username === username && (
+          {blog.user.username === username && (
             <button data-testid="blog-remove" onClick={handleDelete}>
               Remove
             </button>

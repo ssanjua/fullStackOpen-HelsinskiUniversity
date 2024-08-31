@@ -1,12 +1,15 @@
 import React, { useState, useRef } from "react";
 import Toggable from "./Toggable";
+import { useDispatch } from "react-redux";
+import { addBlog } from "../reducers/blogReducer";
 
-const BlogForm = ({ addBlog }) => {
+const BlogForm = () => {
   const [newTitle, setNewTitle] = useState("");
   const [newAuthor, setNewAuthor] = useState("");
   const [newUrl, setNewUrl] = useState("");
 
   const toggableRef = useRef();
+  const dispatch = useDispatch();
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -25,7 +28,7 @@ const BlogForm = ({ addBlog }) => {
       likes: 0,
     };
 
-    addBlog(blogObject);
+    dispatch(addBlog(blogObject));
     setNewAuthor("");
     setNewTitle("");
     setNewUrl("");

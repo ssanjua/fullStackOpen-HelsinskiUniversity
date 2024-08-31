@@ -12,6 +12,12 @@ const getAll = () => {
   return request.then((response) => response.data);
 };
 
+const getBlog = async (id) => {
+  console.log("Fetching blog with id:", id);
+  const response = await axios.get(`${baseUrl}/${id}`);
+  return response.data;
+};
+
 const create = async (newObject) => {
   const config = {
     headers: { Authorization: token },
@@ -25,7 +31,9 @@ const updateLikes = async (id, updatedBlog) => {
   const config = {
     headers: { Authorization: token },
   };
+  console.log("Updating likes for blog with id:", id);
   const response = await axios.put(`${baseUrl}/${id}`, updatedBlog, config);
+  console.log(response.data)
   return response.data;
 };
 
@@ -42,4 +50,4 @@ const deleteBlog = async (id) => {
   }
 };
 
-export default { getAll, create, setToken, updateLikes, deleteBlog };
+export default { getAll, create, setToken, updateLikes, deleteBlog, getBlog };
