@@ -7,8 +7,9 @@ import Notification from "./components/Notification";
 import LoginForm from "./components/LoginForm";
 import BlogForm from "./components/BlogForm";
 import { setNotification } from './reducers/notificationReducer';
-import { setBlogs, addBlog } from './reducers/blogReducer';
+import { setBlogs,  createBlog } from './reducers/blogReducer';
 import { setUser, reset } from './reducers/userReducer';
+import Users from "./components/Users";
 
 const App = () => {
   const [username, setUsernameInput] = useState("");
@@ -38,7 +39,6 @@ const App = () => {
 
     try {
       const user = await loginService.login({ username, password });
-
       window.localStorage.setItem("loggedUser", JSON.stringify(user));
       blogService.setToken(user.token);
       dispatch(setUser(user));
@@ -84,7 +84,6 @@ const App = () => {
     <div>
       <h2>blogs</h2>
       <Notification />
-
       {user.username === null ? (
         <LoginForm
           username={username}

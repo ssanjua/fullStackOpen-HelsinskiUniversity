@@ -13,7 +13,6 @@ const getAll = () => {
 };
 
 const getBlog = async (id) => {
-  console.log("Fetching blog with id:", id);
   const response = await axios.get(`${baseUrl}/${id}`);
   return response.data;
 };
@@ -31,23 +30,16 @@ const updateLikes = async (id, updatedBlog) => {
   const config = {
     headers: { Authorization: token },
   };
-  console.log("Updating likes for blog with id:", id);
   const response = await axios.put(`${baseUrl}/${id}`, updatedBlog, config);
-  console.log(response.data)
   return response.data;
 };
 
 const deleteBlog = async (id) => {
-  try {
-    const config = {
-      headers: { Authorization: token },
-    };
-    const response = await axios.delete(`${baseUrl}/${id}`, config);
-    return response.data;
-  } catch (error) {
-    console.error("Error in deleteBlog:", error);
-    throw error;
-  }
+  const config = {
+    headers: { Authorization: token },
+  };
+  const response = await axios.delete(`${baseUrl}/${id}`, config);
+  return response.data;
 };
 
 export default { getAll, create, setToken, updateLikes, deleteBlog, getBlog };

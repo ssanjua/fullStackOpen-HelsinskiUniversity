@@ -2,6 +2,11 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import blogService from "../services/blogs";
 
 
+export const createBlog = createAsyncThunk("blogs/createBlog", async (newBlog) => {
+  const createdBlog = await blogService.create(newBlog);
+  return createdBlog;
+});
+
 export const likeBlog = createAsyncThunk("blogs/likeBlog", async (id) => {
     console.log("Fetching blog with id:", id);
     const blog = await blogService.getBlog(id);
@@ -30,7 +35,6 @@ const BlogSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(likeBlog.fulfilled, (state, action) => {
-        console.log("likeBlog fulfilled:", action.payload);
         return state.map((blog) =>
           blog.id === action.payload.id ? action.payload : blog
         );
