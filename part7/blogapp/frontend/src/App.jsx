@@ -8,12 +8,19 @@ import Blog from './components/Blog';
 import NewBlog from './components/NewBlog';
 import Notification from './components/Notification';
 import Togglable from './components/Togglable';
+import { useDispatch } from 'react-redux'
+import { showNotification } from './reducers/notificationReducer'
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
   const [notification, setNotification] = useState(null);
+  const dispatch = useDispatch()
 
+  const notify = (message, type = 'success') => {
+    dispatch(showNotification(message, type, 5))
+  };
+  
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
   }, []);
@@ -27,12 +34,6 @@ const App = () => {
 
   const blogFormRef = createRef();
 
-  const notify = (message, type = 'success') => {
-    setNotification({ message, type });
-    setTimeout(() => {
-      setNotification(null);
-    }, 5000);
-  };
 
   const handleLogin = async (credentials) => {
     try {
@@ -76,6 +77,7 @@ const App = () => {
       notify(`Blog ${blog.title}, by ${blog.author} removed`);
     }
   };
+  
 
   if (!user) {
     return (
