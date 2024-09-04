@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import storage from '../services/storage';
+import { Link } from 'react-router-dom';
 
 const Blog = ({ blog, handleVote, handleDelete }) => {
-  const [visible, setVisible] = useState(false);
 
   const nameOfUser = blog.user ? blog.user.name : 'anonymous';
 
@@ -20,27 +20,22 @@ const Blog = ({ blog, handleVote, handleDelete }) => {
 
   return (
     <div style={style} className="blog">
-      {blog.title} by {blog.author}
-      <button style={{ marginLeft: 3 }} onClick={() => setVisible(!visible)}>
-        {visible ? 'hide' : 'view'}
-      </button>
-      {visible && (
+      <Link to={`/blogs/${blog.id}`}>{blog.title}</Link> by {blog.author}
+      <div>
         <div>
-          <div>
-            <a href={blog.url}>{blog.url}</a>
-          </div>
-          <div>
-            likes {blog.likes}
-            <button style={{ marginLeft: 3 }} onClick={() => handleVote(blog)}>
-              like
-            </button>
-          </div>
-          <div>{nameOfUser}</div>
-          {canRemove && (
-            <button onClick={() => handleDelete(blog)}>remove</button>
-          )}
+          <a href={blog.url}>{blog.url}</a>
         </div>
-      )}
+        <div>
+          likes {blog.likes}
+          <button style={{ marginLeft: 3 }} onClick={() => handleVote(blog)}>
+            like
+          </button>
+        </div>
+        <div>{nameOfUser}</div>
+        {canRemove && (
+          <button onClick={() => handleDelete(blog)}>remove</button>
+        )}
+      </div>
     </div>
   );
 };
