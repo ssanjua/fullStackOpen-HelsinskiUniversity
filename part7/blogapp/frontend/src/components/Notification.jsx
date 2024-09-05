@@ -1,24 +1,23 @@
-import { useSelector } from 'react-redux'
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { Alert, Box } from '@mui/material';
 
 const Notification = () => {
-  const notification = useSelector(state => state.notification)
+  const notification = useSelector(state => state.notification);
 
   if (!notification) {
-    return null
+    return null;
   }
 
-  const { message, type } = notification
+  const { message, type } = notification;
 
-  const style = {
-    backgroundColor: 'lightgrey',
-    margin: '10px',
-    padding: '10px',
-    border: '2px solid',
-    borderColor: type === 'success' ? 'green' : 'red',
-    borderRadius: '5px',
-  }
+  return (
+    <Box sx={{ width: '100%', mt: 2 }}>
+      <Alert severity={type} variant="filled">
+        {message}
+      </Alert>
+    </Box>
+  );
+};
 
-  return <div style={style}>{message}</div>
-}
-
-export default Notification
+export default Notification;

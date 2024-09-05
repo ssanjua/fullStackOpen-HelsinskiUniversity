@@ -1,29 +1,40 @@
-import React from 'react'
-import { Link, useParams } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { useParams, Link } from 'react-router-dom';
+import { Typography, List, ListItem, ListItemText, Paper, Box, Avatar, ListItemAvatar } from '@mui/material';
+import { blue } from '@mui/material/colors';
+import PostAddIcon from '@mui/icons-material/PostAdd';
 
 const UserBlogs = () => {
-  const { id } = useParams()
-  const users = useSelector(state => state.users)
-  const user = users.find(u => u.id === id)
+  const { id } = useParams();
+  const user = useSelector(state => state.users.find(u => u.id === id));
 
   if (!user) {
-    return <div>user not found</div>
+    return <Typography variant="h6" color="error">User not found</Typography>;
   }
 
   return (
-    <div>
-      <h2>{user.name}</h2>
-      <h3>Added blogs</h3>
-      <ul>
-        {user.blogs.map(blog => (
-          <Link to={`/blogs/${blog.id}`}>
-            <li key={blog.id}>{blog.title}</li>
-          </Link>
-        ))}
-      </ul>
-    </div>
-  )
-}
+    <Box sx={{ mt: 4, textAlign: 'center' }}>
+      <Typography variant="h4" component="h2" gutterBottom>
+        {user.name}
+      </Typography>
+      <Typography variant="h6" component="h3" gutterBottom>
+        Added blogs
+      </Typography>
+      <Paper elevation={3} sx={{ maxWidth: 800, margin: 'auto', mt: 2, padding: 2 }}>
+        <List>
+          {user.blogs.map(blog => (
+            <ListItem key={blog.id} component={Link} to={`/blogs/${blog.id}`} button>
+              <ListItemAvatar>
+                <PostAddIcon />
+              </ListItemAvatar>
+              <ListItemText primary={blog.title} />
+            </ListItem>
+          ))}
+        </List>
+      </Paper>
+    </Box>
+  );
+};
 
-export default UserBlogs
+export default UserBlogs;

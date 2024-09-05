@@ -1,4 +1,7 @@
-import { useState, forwardRef, useImperativeHandle } from 'react';
+import React, { useState, forwardRef, useImperativeHandle } from 'react';
+import { Button, Box, Paper } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
 const Togglable = forwardRef((props, ref) => {
   const [visible, setVisible] = useState(false);
@@ -17,15 +20,30 @@ const Togglable = forwardRef((props, ref) => {
   });
 
   return (
-    <div>
-      <div style={hideWhenVisible}>
-        <button onClick={toggleVisibility}>{props.buttonLabel}</button>
-      </div>
-      <div style={showWhenVisible}>
+    <Box sx={{ mt: 4, textAlign: 'center' }}>
+      <Box sx={hideWhenVisible}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={toggleVisibility}
+          endIcon={<ExpandMoreIcon />}
+        >
+          {props.buttonLabel}
+        </Button>
+      </Box>
+      <Paper elevation={3} sx={{ padding: 3, mt: 2, display: showWhenVisible.display }}>
         {props.children}
-        <button onClick={toggleVisibility}>cancel</button>
-      </div>
-    </div>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={toggleVisibility}
+          startIcon={<ExpandLessIcon />}
+          sx={{ mt: 2 }}
+        >
+          Cancel
+        </Button>
+      </Paper>
+    </Box>
   );
 });
 
