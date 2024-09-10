@@ -105,7 +105,7 @@ const typeDefs = `
     allBooks(author: String, genre: String): [Books!]
     allAuthors: [Authors!]
   }
-    
+
   type Mutation {
     addBook(
       title: String!
@@ -149,6 +149,11 @@ const resolvers = {
       }
       const book = { ...args, id: uuid() }
       books = books.concat(book)
+      // Check if author exists, if not, add the author
+      if (!authors.find(a => a.name === args.author)) {
+        const newAuthor = { name: args.author, id: uuid() }
+        authors = authors.concat(newAuthor)
+      }
       return book
     },
     editAuthor: (root, args) => {
