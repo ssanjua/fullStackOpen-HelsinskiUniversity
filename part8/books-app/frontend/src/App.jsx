@@ -27,7 +27,6 @@ const ALL_BOOKS = gql`
   }
 `
 
-
 const App = () => {
   const [page, setPage] = useState("authors");
 
