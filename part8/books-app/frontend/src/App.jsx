@@ -2,48 +2,49 @@ import { useState } from "react";
 import Authors from "./components/Authors";
 import Books from "./components/Books";
 import NewBook from "./components/NewBook";
-import { gql, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
+import LoginForm from "./components/LoginForm";
+import { ALL_AUTHORS, ALL_BOOKS } from './graphql/queries';
+import { useApolloClient } from '@apollo/client'; // Agregar esta línea
 
-
-const ALL_AUTHORS = gql`
-  query {
-    allAuthors {
-      name
-      id
-      born
-      bookCount
-    }
-  }
-`
-
-const ALL_BOOKS = gql`
-  query {
-     allBooks { 
-      title 
-      author
-      published 
-      genres
-    }
-  }
-`
 
 const App = () => {
-  const [page, setPage] = useState("authors");
-
+  const [page, setPage] = useState("authors")
+  // eslint-disable-next-line no-unused-vars
+  const [token, setToken] = useState(null)
+  const client = useApolloClient()
   const result = useQuery(ALL_AUTHORS)
   const books = useQuery(ALL_BOOKS)
+
+  const userToken = localStorage.getItem('user-token')
+
+  const isUserLoggedIn = userToken !== null;
 
   if (result.loading || books.loading) {
     return <div>loading...</div>
   }
 
+  const logout = () => {
+    setToken(null)
+    localStorage.clear()
+    client.resetStore()
+  }
+
   return (
     <div>
       <div>
+        {!isUserLoggedIn && (<button onClick={() => setPage("login")}>login</button>)}
         <button onClick={() => setPage("authors")}>authors</button>
         <button onClick={() => setPage("books")}>books</button>
-        <button onClick={() => setPage("add")}>add book</button>
+        {isUserLoggedIn && ( 
+          <>
+          <button onClick={() => setPage("add")}>add book</button>
+          <button onClick={logout}>logout</button>
+          </>
+        )}
       </div>
+
+      {page === "login" && <LoginForm setToken={setToken} />}
 
       {page === "authors" && <Authors authors={result.data.allAuthors} show={page === "authors"} />}
 

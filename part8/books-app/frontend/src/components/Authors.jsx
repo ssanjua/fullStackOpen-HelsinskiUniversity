@@ -1,28 +1,8 @@
-import PropTypes from 'prop-types';
-import { useState } from 'react';
-import { gql, useMutation, useQuery } from '@apollo/client'
-
-const EDIT_AUTHOR = gql`
-  mutation addAuthorInfo ($editedAuthorName: String!, $editedBornYear: Int!) {
-    editAuthor(
-      name: $editedAuthorName,
-      setBornTo: $editedBornYear
-    ) {
-      name
-      born  
-    }
-  }
-`
-
-const ALL_AUTHORS = gql`
-  query {
-    allAuthors {
-      name
-      born
-      bookCount
-    }
-  }
-`
+import PropTypes from 'prop-types'
+import { useState } from 'react'
+import { useMutation, useQuery } from '@apollo/client'
+import { ALL_AUTHORS } from '../graphql/queries'
+import { EDIT_AUTHOR } from '../graphql/mutations'
 
 const Authors = ({ authors }) => {
   const [ editedAuthorName, setEditedAuthorName ] = useState('')
@@ -54,7 +34,7 @@ const Authors = ({ authors }) => {
       <table>
         <tbody>
           <tr>
-            <th></th>
+            <th>author</th>
             <th>born</th>
             <th>books</th>
           </tr>

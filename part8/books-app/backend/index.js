@@ -15,6 +15,7 @@ require('dotenv').config()
 
 const MONGO_URI = process.env.MONGODB_URI
 console.log("connected to ", MONGO_URI)
+
 const JWT_SECRET = process.env.JWT_SECRET
 
 mongoose.connect(MONGO_URI).then(() => {
@@ -141,7 +142,7 @@ const resolvers = {
         })
       }
       const author = await Author.findOne({ name: args.name })
-      author.born = args.born
+      author.born = args.setBornTo
       return author.save()
     },
     createUser: async (root, args) => {
@@ -173,7 +174,7 @@ const resolvers = {
         id: user._id
       }
 
-      return { value: jwt.sign(userForToken, process.env.JWT_SECRET)}
+      return { value: jwt.sign(userForToken, JWT_SECRET)}
     }
   },
 }
