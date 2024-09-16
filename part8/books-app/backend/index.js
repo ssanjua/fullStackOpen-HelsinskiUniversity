@@ -3,6 +3,8 @@ const { startStandaloneServer } = require('@apollo/server/standalone')
 const { v1: uuid } = require('uuid')
 const { GraphQLError } = require('graphql')
 const jwt = require('jsonwebtoken')
+const { PubSub } = require('graphql-subscriptions')
+
 
 const mongoose = require('mongoose')
 mongoose.set('strictQuery', false)
@@ -23,6 +25,8 @@ mongoose.connect(MONGO_URI).then(() => {
 }).catch((error) => {
   console.log("error conencting to mongoDB", error.mesage)
 })
+
+const pubsub = new PubSub()
 
 const typeDefs = `
   type Author {
@@ -78,6 +82,10 @@ const typeDefs = `
       password: String!
     ): Token
   }
+
+  type Subscription {
+    bookAdded: Books!
+  }
 `
 
 const resolvers = {
@@ -110,7 +118,7 @@ const resolvers = {
       })
       }
       try {
-        const author = await Author.findOne({ name: args.author }) // Buscar el autor
+        const author = await Author.findOne({ name: args.author })
         let authorId;
 
         if (!author) {
@@ -122,9 +130,10 @@ const resolvers = {
         }
 
         const book = new Book({ ...args, author: authorId })
-        const savedBook = await book.save();
-        await savedBook.populate('author');
-        return savedBook;
+        const savedBook = await book.save()
+        await savedBook.populate('author')
+        pubsub.publish('BOOK_ADDED', { bookAdded: savedBook })
+        return savedBook
       } catch (e) {
         throw new GraphQLError("Error occurred", {
           extensions: {
@@ -177,6 +186,11 @@ const resolvers = {
       return { value: jwt.sign(userForToken, JWT_SECRET)}
     }
   },
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterator(['BOOK_ADDED'])
+    }
+  }
 }
 
 const server = new ApolloServer({
@@ -197,6 +211,7 @@ startStandaloneServer(server, {
       return { currentUser }
     }
   },
-}).then(({ url }) => {
+}).then(({ url, subscriptionsUrl }) => {
   console.log(`Server ready at ${url}`)
+  console.log(`Subscriptions ready at ${subscriptionsUrl}`)
 })

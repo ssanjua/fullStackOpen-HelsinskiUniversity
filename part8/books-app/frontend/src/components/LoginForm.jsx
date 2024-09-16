@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 import { useMutation } from "@apollo/client"
 import PropTypes from 'prop-types'
-import { LOGIN } from '../graphql/queries'
+import { LOGIN } from '../graphql/mutations'
 
 const LoginForm = ({ setToken }) => {
   const [ username, setUsername ] = useState("")

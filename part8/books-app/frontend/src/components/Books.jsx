@@ -1,10 +1,18 @@
-import PropTypes from 'prop-types';
+import PropTypes from 'prop-types'
+import { useState } from 'react'
 
 const Books = ({ books }) => {
+  const [ filter, setFilter ] = useState("")
 
   if (books === null) {
     return null
   }
+
+  const uniqueGenres = [...new Set(books.flatMap(book => book.genres))]
+
+  const filteredBooks = books.filter(book =>
+    book.genres.some(genre => genre.toLowerCase().includes(filter.toLowerCase()))
+  )
 
   return (
     <div>
@@ -19,7 +27,7 @@ const Books = ({ books }) => {
           </tr>
         </thead>
         <tbody>
-          {books.map((book) => (
+          {filteredBooks.map((book) => (
             <tr key={book.id}>
               <td>{book.title}</td>
               <td>{book.published}</td>
@@ -29,6 +37,13 @@ const Books = ({ books }) => {
           ))}
         </tbody>
       </table>
+      <div>
+        {uniqueGenres.map((genre) => (
+          <button key={genre} onClick={() => setFilter(genre)}>
+            {genre}
+          </button>
+        ))}
+      </div>
     </div>
   )
 }

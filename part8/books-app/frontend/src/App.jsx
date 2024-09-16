@@ -5,7 +5,8 @@ import NewBook from "./components/NewBook";
 import { useQuery } from '@apollo/client';
 import LoginForm from "./components/LoginForm";
 import { ALL_AUTHORS, ALL_BOOKS } from './graphql/queries';
-import { useApolloClient } from '@apollo/client'; // Agregar esta línea
+import { useApolloClient } from '@apollo/client';
+import Recommend from "./components/Recommend";
 
 
 const App = () => {
@@ -39,6 +40,7 @@ const App = () => {
         {isUserLoggedIn && ( 
           <>
           <button onClick={() => setPage("add")}>add book</button>
+          <button onClick={() => setPage("recommend")}>recommend</button>
           <button onClick={logout}>logout</button>
           </>
         )}
@@ -51,6 +53,9 @@ const App = () => {
       {page === "books" && <Books books={books.data.allBooks} show={page === "books"} />}
 
       {page === "add" && <NewBook show={page === "add"} refetchAuthors={result.refetch} refetchBooks={books.refetch} />}
+      
+      {page === "recommend" && <Recommend books={books.data.allBooks} />}
+      
     </div>
   );
 };

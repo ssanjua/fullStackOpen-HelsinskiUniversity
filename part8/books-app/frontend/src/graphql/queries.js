@@ -3,11 +3,15 @@ import { gql } from '@apollo/client';
 export const ALL_AUTHORS = gql`
   query {
     allAuthors {
-      name
-      id
-      born
-      bookCount
+    ...AuthorsDetails
     }
+  }
+
+  fragment AuthorsDetails on Author {
+    name
+    id
+    born
+    bookCount
   }
 `;
 
@@ -26,10 +30,11 @@ export const ALL_BOOKS = gql`
   }
 `;
 
-export const LOGIN = gql`
-  mutation login($username: String!, $password: String!) {
-    login(username: $username, password: $password) {
-    value
-    }  
+export const GET_USER = gql`
+  query {
+    me {
+      username
+      favoriteGenre
+    }
   }
-`;
+`

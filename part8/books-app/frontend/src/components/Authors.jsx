@@ -11,7 +11,7 @@ const Authors = ({ authors }) => {
   const { data, refetch } = useQuery(ALL_AUTHORS)
 
   const [editAuthor] = useMutation(EDIT_AUTHOR, {
-    onCompleted: () => refetch()
+    onCompleted: () => refetch(ALL_AUTHORS)
   })
 
   if (!data) {
