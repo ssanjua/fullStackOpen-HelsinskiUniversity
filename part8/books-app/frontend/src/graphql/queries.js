@@ -38,3 +38,9 @@ export const GET_USER = gql`
     }
   }
 `
+
+export const GET_GENRES = gql`
+  query {
+    allGenres
+  }
+`

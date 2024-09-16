@@ -1,14 +1,21 @@
 import PropTypes from 'prop-types'
 import { useState } from 'react'
+import { GET_GENRES } from '../graphql/queries'
+import { useQuery } from '@apollo/client'
 
 const Books = ({ books }) => {
   const [ filter, setFilter ] = useState("")
 
+  const { data, loading, error } = useQuery(GET_GENRES)
+
+  if (loading) return <p>Cargando...</p>
+  if (error) return <p>Error: {error.message}</p>
+
+  const { allGenres } = data || {}
+
   if (books === null) {
     return null
   }
-
-  const uniqueGenres = [...new Set(books.flatMap(book => book.genres))]
 
   const filteredBooks = books.filter(book =>
     book.genres.some(genre => genre.toLowerCase().includes(filter.toLowerCase()))
@@ -38,7 +45,7 @@ const Books = ({ books }) => {
         </tbody>
       </table>
       <div>
-        {uniqueGenres.map((genre) => (
+        {allGenres.map((genre) => (
           <button key={genre} onClick={() => setFilter(genre)}>
             {genre}
           </button>

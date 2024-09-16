@@ -38,7 +38,6 @@ const Recommend = ({ books }) => {
           ))}
         </tbody>
       </table>
-
     </div>
   )
 }

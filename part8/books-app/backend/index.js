@@ -60,7 +60,8 @@ const typeDefs = `
     allBooks(author: String, genre: String): [Books!]
     allAuthors: [Author!]
     me: User
-  }
+    allGenres: [String]
+}
 
   type Mutation {
     addBook(
@@ -101,7 +102,16 @@ const resolvers = {
     },
     me: (root, args, context) => {
       return context.currentUser
-    }
+    },
+    allGenres: async () => {
+        const books = await Book.find({})
+        const genresSet = new Set()
+        books.forEach(book => {
+            book.genres.forEach(genre => {
+                genresSet.add(genre);
+            });
+        });
+        return Array.from(genresSet);}
   },
   Author: {
     bookCount: async (root) => {
