@@ -7,7 +7,20 @@ import LoginForm from "./components/LoginForm";
 import { ALL_AUTHORS, ALL_BOOKS } from './graphql/queries';
 import { useApolloClient } from '@apollo/client';
 import Recommend from "./components/Recommend";
+import { useSubscription, gql } from '@apollo/client'
 
+const BOOK_ADDED = gql`
+  subscription {
+    bookAdded {
+      author {
+          name
+        }
+        title
+        published
+        genres
+    }
+  }
+`
 
 const App = () => {
   const [page, setPage] = useState("authors")
@@ -16,6 +29,19 @@ const App = () => {
   const client = useApolloClient()
   const result = useQuery(ALL_AUTHORS)
   const books = useQuery(ALL_BOOKS)
+
+  useSubscription(BOOK_ADDED, {
+    onData: ({ client }) => {
+      client.refetchQueries({
+        include: "all"
+      })
+      client.resetStore()
+    },
+    onError: (e) => {
+      console.log(e)
+      console.log(e.message)
+    },
+  })
 
   const userToken = localStorage.getItem('user-token')
 

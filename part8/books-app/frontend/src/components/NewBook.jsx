@@ -12,13 +12,14 @@ const NewBook = () => {
 
   const [addBook] = useMutation(ADD_BOOK, {
     update: (cache, response) => {
-      cache.updateQuery({ query: ALL_BOOKS }, ({ allBooks }) => {
-        return {
-          allBooks: allBooks.concat(response.data.addBook),
-        }
-      })
+      const existingBooks = cache.readQuery({ query: ALL_BOOKS });
+      if (existingBooks) {
+        cache.writeQuery({
+          query: ALL_BOOKS,
+          data: { allBooks: existingBooks.allBooks.concat(response.data.addBook) },
+        });
+      }
     },
-    
   })
 
   const submit = async (event) => {
@@ -31,7 +32,6 @@ const NewBook = () => {
     setAuthor('')
     setGenres([])
     setGenre('')
-
   }
 
   const addGenre = () => {

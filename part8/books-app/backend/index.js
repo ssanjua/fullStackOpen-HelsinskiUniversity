@@ -5,7 +5,7 @@ const { expressMiddleware } = require('@apollo/server/express4')
 const { ApolloServerPluginDrainHttpServer } = require('@apollo/server/plugin/drainHttpServer')
 const { makeExecutableSchema } = require('@graphql-tools/schema')
 const jwt = require('jsonwebtoken')
-
+const cors = require('cors')
 const http = require('http')
 
 const express = require('express')
@@ -37,6 +37,7 @@ mongoose.connect(MONGO_URI).then(() => {
 
 const start = async () => {
   const app = express()
+  app.use(cors())
   const httpServer = http.createServer(app)
 
   const wsServer = new WebSocketServer({
